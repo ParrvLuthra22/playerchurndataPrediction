@@ -138,7 +138,7 @@ pip install -r requirements.txt
 Open:
 
 ```
-PlayerChurnData.ipynb
+notebooks/PlayerChurnPrediction.ipynb
 ```
 
 ### 4️⃣ (Optional) Run Streamlit App
@@ -164,12 +164,22 @@ streamlit run app.py
 ## 📁 Project Structure
 
 ```
-intelligent-player-churn-prediction/
+playerchurndataPrediction/
 │
-├── PlayerChurnData.ipynb
-├── app.py
-├── requirements.txt
-└── README.md
+├── app.py                      # Streamlit or main application
+├── requirements.txt            # Project dependencies
+├── README.md                   # Project documentation
+│
+├── notebooks/                  # Jupyter notebooks (EDA, experiments)
+│   └── PlayerChurnPrediction.ipynb
+│
+├── data/                       # Data storage (not tracked in git by default)
+│   ├── raw/                    # Original, immutable data dumps
+│   └── processed/              # Cleaned / feature-engineered datasets
+│
+└── assets/                     # Models and visual assets
+	├── models/                 # Saved model artifacts (e.g., churn_model.pkl)
+	└── figures/                # Plots and figures
 ```
 
 ---
