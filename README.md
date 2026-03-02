@@ -1,162 +1,203 @@
-🎮 Intelligent Player Churn Prediction Using Machine Learning
-📌 Overview
-Player retention is critical in the online gaming industry. When players stop engaging with a platform, it directly impacts revenue and long‑term growth.
+# 🎮 Intelligent Player Churn Prediction  
+### Machine Learning–Driven Retention Analytics
 
-This project builds a machine learning–based churn prediction system that identifies players at risk of leaving based on behavioral engagement data.
+---
 
-The system uses supervised learning models to predict churn before it happens, enabling proactive retention strategies.
+## 📌 Overview
 
-🎯 Problem Statement
-Churn is defined as players exhibiting low engagement levels, indicating a high likelihood of discontinuing gameplay.
+Player retention is one of the most critical drivers of revenue in the online gaming industry. Even small increases in churn can significantly affect long-term profitability.
 
-We transformed churn detection into a binary classification problem:
+This project builds an end-to-end machine learning pipeline to predict player churn using behavioral and demographic data. The goal is to identify at-risk players early so companies can take proactive retention actions.
 
-Low Engagement → Churn = 1
+---
 
-Medium/High Engagement → Churn = 0
+## 🎯 Problem Statement
 
-📊 Dataset Description
-40,034 player records
+Churn is defined as players exhibiting low engagement, indicating a high likelihood of discontinuing gameplay.
 
-13 demographic and behavioral features
+We formulated churn detection as a binary classification problem:
 
-Key Features:
-Age
+- **Churn = 1 → Low Engagement**
+- **Churn = 0 → Medium/High Engagement**
 
-Gender
+The objective is to accurately distinguish between players likely to churn and those likely to remain active.
 
-Location
+---
 
-GameGenre
+## 📊 Dataset Information
 
-PlayTimeHours
+- **Total Records:** 40,034 players  
+- **Total Features:** 13  
+- **Target Variable:** Binary Churn Label  
 
-SessionsPerWeek
+### Key Features
 
-AvgSessionDurationMinutes
+**Demographic Features**
+- Age  
+- Gender  
+- Location  
 
-PlayerLevel
+**Game & Behavioral Features**
+- GameGenre  
+- PlayTimeHours  
+- SessionsPerWeek  
+- AvgSessionDurationMinutes  
+- PlayerLevel  
+- AchievementsUnlocked  
 
-AchievementsUnlocked
+> Behavioral engagement features were significantly more predictive than demographic attributes.
 
-Behavioral engagement features were found to be significantly more predictive than demographic features.
+---
 
-⚙️ Methodology
-🔹 Data Preprocessing
-Removed PlayerID (identifier column)
+## ⚙️ Methodology
 
-Converted EngagementLevel to binary churn label
+### 🔹 Data Preprocessing
+- Removed identifier column (`PlayerID`)
+- Converted engagement levels into binary churn labels
+- Applied One-Hot Encoding to categorical variables
+- Standardized numerical features using `StandardScaler`
+- Performed 80–20 stratified train-test split
 
-Applied One-Hot Encoding to categorical features
+### 🔹 Feature Engineering
 
-Scaled numerical features using StandardScaler
+Created a new composite metric:
 
-Performed 80–20 stratified train-test split
+```python
+EngagementScore = SessionsPerWeek * AvgSessionDurationMinutes
+```
 
-🔹 Feature Engineering
-Created:
+This feature captures overall engagement intensity and improved predictive performance.
 
-EngagementScore = SessionsPerWeek × AvgSessionDurationMinutes
-This captures overall player engagement intensity.
+---
 
-🤖 Models Implemented
-1️⃣ Logistic Regression (Baseline Model)
-Accuracy: ~87%
+## 🤖 Models Implemented
 
-ROC-AUC: ~0.90
+### 1️⃣ Logistic Regression (Baseline)
+- Accuracy: ~87%
+- ROC-AUC: ~0.90
 
-2️⃣ Random Forest Classifier (Best Performing Model)
-Accuracy: ~92%
+### 2️⃣ Random Forest Classifier (Best Performing Model)
+- Accuracy: ~92%
+- ROC-AUC: ~0.94
 
-ROC-AUC: ~0.94
+Random Forest outperformed Logistic Regression due to its ability to capture nonlinear relationships and feature interactions.
 
-Random Forest outperformed Logistic Regression due to its ability to capture nonlinear behavioral patterns.
+---
 
-📈 Evaluation Metrics
-Models were evaluated using:
+## 📈 Evaluation Metrics
 
-Accuracy
+- Accuracy  
+- ROC-AUC Score  
+- Precision  
+- Recall  
+- Confusion Matrix  
 
-ROC-AUC Score
+A ROC-AUC above **0.90** indicates strong class separation capability.
 
-Precision & Recall
+---
 
-Confusion Matrix
+## 🔍 Key Insights
 
-A ROC-AUC above 0.90 indicates strong separation between churned and retained players.
+- SessionsPerWeek is the strongest churn predictor.
+- Engagement duration significantly influences retention.
+- Behavioral features outperform demographic features.
+- Players with lower progression and shorter sessions are more likely to churn.
 
-🔍 Key Insights
-SessionsPerWeek is the strongest churn predictor.
+---
 
-Engagement duration strongly influences retention.
+## 💼 Business Impact
 
-Behavioral features outperform demographic attributes.
+This system enables gaming platforms to:
 
-Players with lower progression and shorter sessions are more likely to churn.
+- Identify high-risk players early  
+- Launch targeted retention campaigns  
+- Personalize in-game rewards  
+- Reduce potential revenue loss  
 
-💼 Business Impact
-This system enables gaming companies to:
+Instead of reacting to churn, companies can act proactively using predictive analytics.
 
-Identify high-risk players early
+---
 
-Launch targeted retention campaigns
+## 🚀 Installation & Usage
 
-Personalize in-game rewards
+### 1️⃣ Clone the Repository
 
-Reduce revenue loss
-
-Instead of reacting to churn, companies can act proactively.
-
-🚀 How to Run the Project
-1️⃣ Clone the Repository
+```bash
 git clone https://github.com/YOUR_USERNAME/intelligent-player-churn-prediction.git
 cd intelligent-player-churn-prediction
-2️⃣ Install Dependencies
+```
+
+### 2️⃣ Install Dependencies
+
+```bash
 pip install -r requirements.txt
-3️⃣ Run the Notebook
+```
+
+### 3️⃣ Run the Notebook
+
 Open:
 
+```
 PlayerChurnData.ipynb
-Or launch the Streamlit app (if included):
+```
 
+### 4️⃣ (Optional) Run Streamlit App
+
+```bash
 streamlit run app.py
-🛠 Tech Stack
-Python
+```
 
-Pandas
+---
 
-NumPy
+## 🛠 Tech Stack
 
-Scikit-Learn
+- Python  
+- Pandas  
+- NumPy  
+- Scikit-Learn  
+- Matplotlib  
+- Seaborn  
+- Streamlit  
 
-Matplotlib
+---
 
-Seaborn
+## 📁 Project Structure
 
-Streamlit
-
-📌 Project Structure
+```
 intelligent-player-churn-prediction/
 │
 ├── PlayerChurnData.ipynb
+├── app.py
 ├── requirements.txt
-├── README.md
-└── app.py (optional Streamlit app)
-🧠 Future Work
-Real-time deployment
+└── README.md
+```
 
-Integration with AI-driven retention recommendation system
+---
 
-Advanced ensemble optimization
+## 🧠 Future Improvements
 
-Model monitoring pipeline
+- Real-time production deployment  
+- Advanced ensemble models (XGBoost, LightGBM)  
+- Model monitoring & drift detection  
+- SHAP-based feature explainability  
+- AI-driven retention recommendation engine  
 
-👥 Team Members
-Pushkar
+---
 
-Parrv
+## 👥 Team
 
-Malhar
+- Pushkar  
+- Parrv  
+- Malhar  
+- Akshat  
 
-Akshat
+---
 
+## ⭐ Project Highlights
+
+- End-to-end ML pipeline  
+- Strong predictive performance (ROC-AUC ~0.94)  
+- Business-focused application  
+- Scalable for production deployment  
+
+---
