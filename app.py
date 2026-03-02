@@ -166,6 +166,3 @@ X_train, X_test, y_train, y_test = train_test_split(
 
 print(y_train.value_counts(normalize=True))
 print(y_test.value_counts(normalize=True))
-
-import joblib
-joblib.dump(rf_model, "churn_model.pkl")
