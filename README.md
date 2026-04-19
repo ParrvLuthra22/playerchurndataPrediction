@@ -1,147 +1,101 @@
-# 🎮 Intelligent Player Churn Prediction  
-### Machine Learning–Driven Retention Analytics
+# 🎮 Player Churn Prediction & Retention Advisor
+
+A production-ready Streamlit application that combines:
+
+- **ML inference** for churn prediction (using a pre-trained `churn_model.pkl`)
+- **RAG retrieval** from retention strategy knowledge (`rag/knowledge.txt`)
+- **LangGraph workflow** to generate concise, actionable retention recommendations
+
+This repository is structured so prediction works independently, while GenAI/RAG features degrade gracefully if API configuration is unavailable.
 
 ---
 
-## 📌 Overview
+## Key capabilities
 
-Player retention is one of the most critical drivers of revenue in the online gaming industry. Even small increases in churn can significantly affect long-term profitability.
-
-This project builds an end-to-end machine learning pipeline to predict player churn using behavioral and demographic data. The goal is to identify at-risk players early so companies can take proactive retention actions.
-
----
-
-## 🎯 Problem Statement
-
-Churn is defined as players exhibiting low engagement, indicating a high likelihood of discontinuing gameplay.
-
-We formulated churn detection as a binary classification problem:
-
-- **Churn = 1 → Low Engagement**
-- **Churn = 0 → Medium/High Engagement**
-
-The objective is to accurately distinguish between players likely to churn and those likely to remain active.
+1. Upload a CSV and run churn prediction across all rows.
+2. Validate uploaded schema against model-required features.
+3. Display prediction output table + predicted churn rate.
+4. Run AI advisor for a sample row (prioritizes high-risk player when available).
+5. Retrieve supporting retention snippets from knowledge base for transparent recommendations.
 
 ---
 
-## 📊 Dataset Information
+## Project structure
 
-- **Total Records:** 40,034 players  
-- **Total Features:** 13  
-- **Target Variable:** Binary Churn Label  
-
-### Key Features
-
-**Demographic Features**
-- Age  
-- Gender  
-- Location  
-
-**Game & Behavioral Features**
-- GameGenre  
-- PlayTimeHours  
-- SessionsPerWeek  
-- AvgSessionDurationMinutes  
-- PlayerLevel  
-- AchievementsUnlocked  
-
-> Behavioral engagement features were significantly more predictive than demographic attributes.
-
----
-
-## ⚙️ Methodology
-
-### 🔹 Data Preprocessing
-- Removed identifier column (`PlayerID`)
-- Converted engagement levels into binary churn labels
-- Applied One-Hot Encoding to categorical variables
-- Standardized numerical features using `StandardScaler`
-- Performed 80–20 stratified train-test split
-
-### 🔹 Feature Engineering
-
-Created a new composite metric:
-
-```python
-EngagementScore = SessionsPerWeek * AvgSessionDurationMinutes
+```text
+playerchurndataPrediction/
+├── app.py                     # Streamlit UI + prediction + advisor orchestration
+├── agent/
+│   ├── __init__.py
+│   └── graph.py               # LangGraph nodes (analyze, retrieve, generate)
+├── rag/
+│   ├── __init__.py
+│   ├── knowledge.txt          # Domain retention strategy corpus
+│   ├── vector_store.py        # Chroma index build + retrieval + fallback retrieval
+│   └── chroma_db/             # Persisted Chroma database
+├── utils/
+│   ├── __init__.py
+│   └── llm.py                 # Groq/OpenAI-compatible client configuration
+├── model/
+│   └── churn_model.pkl        # Primary model path
+├── assets/models/
+│   └── churn_model.pkl        # Backward-compatible fallback model path
+├── requirements.txt
+└── README.md
 ```
 
-This feature captures overall engagement intensity and improved predictive performance.
+---
+
+## Model input contract
+
+The current trained model expects these feature columns:
+
+- `Age`
+- `Gender`
+- `Location`
+- `GameGenre`
+- `PlayTimeHours`
+- `InGamePurchases`
+- `GameDifficulty`
+- `SessionsPerWeek`
+- `AvgSessionDurationMinutes`
+- `PlayerLevel`
+- `AchievementsUnlocked`
+
+Columns like `PlayerID`, `EngagementLevel`, and `Churn` are treated as non-feature metadata and removed before prediction.
 
 ---
 
-## 🤖 Models Implemented
+## Setup
 
-### 1️⃣ Logistic Regression (Baseline)
-- Accuracy: ~87%
-- ROC-AUC: ~0.90
+### 1) Create and activate a Python environment
 
-### 2️⃣ Random Forest Classifier (Best Performing Model)
-- Accuracy: ~92%
-- ROC-AUC: ~0.94
+Use your preferred environment manager (`venv`, `conda`, etc.).
 
-Random Forest outperformed Logistic Regression due to its ability to capture nonlinear relationships and feature interactions.
-
----
-
-## 📈 Evaluation Metrics
-
-- Accuracy  
-- ROC-AUC Score  
-- Precision  
-- Recall  
-- Confusion Matrix  
-
-A ROC-AUC above **0.90** indicates strong class separation capability.
-
----
-
-## 🔍 Key Insights
-
-- SessionsPerWeek is the strongest churn predictor.
-- Engagement duration significantly influences retention.
-- Behavioral features outperform demographic features.
-- Players with lower progression and shorter sessions are more likely to churn.
-
----
-
-## 💼 Business Impact
-
-This system enables gaming platforms to:
-
-- Identify high-risk players early  
-- Launch targeted retention campaigns  
-- Personalize in-game rewards  
-- Reduce potential revenue loss  
-
-Instead of reacting to churn, companies can act proactively using predictive analytics.
-
----
-
-## 🚀 Installation & Usage
-
-### 1️⃣ Clone the Repository
-
-```bash
-git clone https://github.com/YOUR_USERNAME/intelligent-player-churn-prediction.git
-cd intelligent-player-churn-prediction
-```
-
-### 2️⃣ Install Dependencies
+### 2) Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 3️⃣ Run the Notebook
+### 3) Configure environment variables (for GenAI/RAG features)
 
-Open:
+Set in shell or `.env`:
 
-```
-notebooks/PlayerChurnPrediction.ipynb
-```
+- `GROQ_API_KEY` (**required** for AI advisor)
+- `GROQ_BASE_URL` (optional, default: `https://api.groq.com/openai/v1`)
+- `GROQ_MODEL` (optional, default: `llama-3.1-8b-instant`)
+- `GROQ_EMBEDDING_MODEL` (optional, default: `text-embedding-3-small`)
+- `GROQ_TEMPERATURE` (optional, default: `0.25`)
 
-### 4️⃣ (Optional) Run Streamlit App
+### 4) Ensure model file exists
+
+Supported locations:
+
+- `model/churn_model.pkl` (preferred)
+- `assets/models/churn_model.pkl` (fallback)
+
+### 5) Run the app
 
 ```bash
 streamlit run app.py
@@ -149,65 +103,60 @@ streamlit run app.py
 
 ---
 
-## 🛠 Tech Stack
+## Architecture overview
 
-- Python  
-- Pandas  
-- NumPy  
-- Scikit-Learn  
-- Matplotlib  
-- Seaborn  
-- Streamlit  
+### `app.py` (application layer)
 
----
+- Loads model from supported paths.
+- Preprocesses uploaded CSV.
+- Validates schema and aligns columns to model feature order.
+- Runs prediction and displays metrics.
+- Invokes AI advisor workflow for a sample player.
 
-## 📁 Project Structure
+### `agent/graph.py` (reasoning/orchestration layer)
 
-```
-playerchurndataPrediction/
-│
-├── app.py                      # Streamlit or main application
-├── requirements.txt            # Project dependencies
-├── README.md                   # Project documentation
-│
-├── notebooks/                  # Jupyter notebooks (EDA, experiments)
-│   └── PlayerChurnPrediction.ipynb
-│
-├── data/                       # Data storage (not tracked in git by default)
-│   ├── raw/                    # Original, immutable data dumps
-│   └── processed/              # Cleaned / feature-engineered datasets
-│
-└── assets/                     # Models and visual assets
-	├── models/                 # Saved model artifacts (e.g., churn_model.pkl)
-	└── figures/                # Plots and figures
-```
+- Implements a 3-step LangGraph pipeline:
+  - `analyze`: builds player risk context
+  - `retrieve`: fetches relevant strategy snippets
+  - `generate`: returns explanation + recommendations via LLM
+- Uses cached compiled graph for efficient repeated execution.
+
+### `rag/vector_store.py` (knowledge retrieval layer)
+
+- Builds/loads Chroma vector store from `knowledge.txt`.
+- Retrieves top-k relevant chunks.
+- Provides keyword-overlap fallback when embeddings are unavailable.
+
+### `utils/llm.py` (model client configuration)
+
+- Centralizes LLM settings and client creation.
+- Ensures consistent chat/embedding config across the app.
 
 ---
 
-## 🧠 Future Improvements
+## Troubleshooting
 
-- Real-time production deployment  
-- Advanced ensemble models (XGBoost, LightGBM)  
-- Model monitoring & drift detection  
-- SHAP-based feature explainability  
-- AI-driven retention recommendation engine  
+### Prediction fails after upload
 
----
+- Check the **Model Schema Check** panel in the UI.
+- Ensure all required model feature columns are present.
+- Remove or rename non-matching columns to match expected training schema.
 
-## 👥 Team
+### App runs but advisor fails
 
-- Pushkar  
-- Parrv  
-- Malhar  
-- Akshat  
+- Verify `GROQ_API_KEY` is set.
+- Confirm internet access and model/embedding settings.
+- Prediction remains available even if advisor features are unavailable.
 
----
+### Model not found
 
-## ⭐ Project Highlights
-
-- End-to-end ML pipeline  
-- Strong predictive performance (ROC-AUC ~0.94)  
-- Business-focused application  
-- Scalable for production deployment  
+- Confirm `churn_model.pkl` exists in either `model/` or `assets/models/`.
 
 ---
+
+## Engineering notes
+
+- Inference-only application (no retraining inside app runtime)
+- Clear module boundaries (UI, orchestration, retrieval, LLM config)
+- Path-safe file handling with `pathlib`
+- Defensive error handling and user-facing diagnostics

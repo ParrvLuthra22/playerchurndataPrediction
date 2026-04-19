@@ -1,0 +1,29 @@
+1) Personalized Win-Back Offer
+For players flagged as high churn risk, deliver a limited-time in-game reward matched to their favorite genre or play history.
+
+2) Session Re-Activation Campaign
+If weekly sessions drop significantly, trigger a targeted notification with one-click resume and a short challenge objective.
+
+3) Dynamic Difficulty and Onboarding Support
+Players with low progression should receive adaptive difficulty tuning, contextual tips, and optional guided missions.
+
+4) Social Retention Hooks
+Encourage players to join squads, friend groups, or guilds; social ties increase return probability and session consistency.
+
+5) Event-Based Engagement Boost
+Run weekend micro-events with clear goals and visible rewards for at-risk players to rebuild routine play behavior.
+
+6) Loyalty Milestones
+Introduce streak rewards and milestone bonuses tied to consecutive login days or completed missions.
+
+7) Personalized Content Recommendations
+Recommend game modes and missions based on prior session duration and achievement patterns to reduce decision fatigue.
+
+8) Inactivity Escalation Workflow
+When inactivity crosses thresholds (e.g., 3, 7, 14 days), escalate from reminder to incentive to premium offer.
+
+9) Early Friction Detection
+Detect repeated short sessions or repeated losses and proactively surface support, easier missions, or starter packs.
+
+10) Follow-Up Measurement Loop
+After each retention action, track post-intervention sessions and churn probability changes to optimize future campaigns.

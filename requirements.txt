@@ -1,5 +1,12 @@
-streamlit
-pandas
-numpy
+streamlit>=1.35.0
+pandas>=2.2.2
+numpy>=1.26.4
 scikit-learn==1.6.1
-joblib
+joblib>=1.4.2
+langchain>=0.2.16
+langchain-openai>=0.1.22
+langchain-chroma>=0.1.2
+langchain-text-splitters>=0.2.2
+langgraph>=0.2.14
+chromadb>=0.5.5
+python-dotenv>=1.0.1
